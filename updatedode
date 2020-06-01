@@ -1,0 +1,39 @@
+I=imread("Lena.png");
+I=im2double(rgb2gray(I));
+s=size(I);
+n=3;
+
+        rem=mod(s(1),n);
+    a_r=zeros(n-rem,s(2));
+    
+    I=cat(1,I,a_r);
+
+s=size(I);
+
+    rem=mod(s(2),n);
+    a_c=zeros(s(1),n-rem);
+    M=cat(2,I,a_c);
+
+final=medianvb(M,n);
+imshow((final),[]);
+
+
+function median = medianvb(x,y);
+    m_s=size(x);
+    
+    r=[y*ones(1,m_s(1)/y)];
+    
+    %disp(r);
+    c=[y*ones(1,m_s(2)/y)];
+    median=mat2cell(x,r,c);
+     for i=1:m_s(1)/y;
+         for j=1:m_s(2)/y;
+             srt=sort(median{i,j});
+             mid=srt(round((y*y)/2));
+                        median{i,j}=mid*ones(y,y);
+                        %disp(median{i,j});
+             
+         end
+     end
+    median=cell2mat(median);
+end
