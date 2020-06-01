@@ -1,0 +1,49 @@
+I=imread("20150411_184555.jpg");
+I=im2double(rgb2gray(I));
+s=size(I);
+n=3;
+if(mod(s(1),n)~=0) %add rows
+       % q=floor(s(1)/n);
+        rem=mod(s(1),n);
+    a_r=zeros(n-rem,s(2));
+    M=cat(1,I,a_r);
+elseif(mod(s(2),n)~=0)%colums add
+    %q=floor(s(2)/n);
+    %disp(q);
+    rem=mod(s(2),n);
+    a_c=zeros(s(1),n-rem);
+    %disp(a_c);
+    M=cat(2,I,a_c);
+elseif(mod(s(1),n)~=0 && mod(s(2),n)~=0 )
+    rem1=mod(s(1),n);
+    rem2=mod(s(2),n);
+    a_r=zeros(n-rem1,s(2));
+    M1=cat(1,I,a_r);
+    a_c=zeros(size(M1,1),n-rem2);
+    M=cat(2,M1,a_c);
+else
+    M=I;
+end
+
+final=median(M,n);
+imshow(uint8(final));
+
+
+function median = median(x,y);
+    m_s=size(x);
+    
+    r=[y*ones(1,m_s(1)/y)];
+    %disp(r);
+    c=[y*ones(1,m_s(2)/y)];
+    median=mat2cell(x,r,c);
+     for i=1:m_s(1)/y;
+         for j=1:m_s(2)/y;
+             srt=sort(median{i,j});
+             mid=srt(round((y*y)/2));
+                        median{i,j}=mid*ones(y,y);
+                        %disp(median{i,j});
+             
+         end
+     end
+    median=cell2mat(median);
+end
